@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<a href="menu.html" class="back-button">Regresar al Menu</a>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Juego de Memorama</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: pink;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #game-board {
+      display: none;
+      margin: 20px auto;
+      width: 320px;
+      display: grid;
+      grid-template-columns: repeat(4, 75px);
+      gap: 10px;
+    }
+
+    .card {
+      width: 75px;
+      height: 75px;
+      background-color: #4CAF50;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .flipped {
+      background-color: #fff;
+      color: #333;
+      cursor: default;
+    }
+
+    #start-button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #win-message {
+      display: none;
+      margin-top: 30px;
+    }
+
+    #win-message img {
+      width: 150px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Instrucciones</h1>
+<dt><b>selecciona el boton de comenzar</b></dt>
+<dt><b>Al dar click te va a aparecer unas tarjetas con imagenes las cuales deben darle cick a las tarjeta </b></dt>
+<dt><b>con el final de seleccionar dos que sean iguales y asi sucesivamente hasta selleccionar todas correctas</b></dt>
+  <h1>Memorama</h1>
+  <button id="start-button">Comenzar Juego</button>
+
+  <div id="game-board"></div>
+
+  <div id="win-message">
+    <h2>¡Felicidades! Has ganado 🎉</h2>
+    <img src="https://i.imgur.com/7D7I6dI.png" alt="Premio">
+  </div>
+  <script>
+    const board = document.getElementById("game-board");
+    const startBtn = document.getElementById("start-button");
+    const winMessage = document.getElementById("win-message");
+
+    const emojis = ["🍎", "🍌", "🍇", "🍓", "🍒", "🍍", "🥝", "🍉"];
+    let cards = [];
+    let flippedCards = [];
+    let matched = 0;
+
+    startBtn.addEventListener("click", startGame);
+
+    function startGame() {
+      board.innerHTML = "";
+      board.style.display = "grid";
+      winMessage.style.display = "none";
+      matched = 0;
+
+      // Duplicar y mezclar las cartas
+      cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+
+      cards.forEach((emoji, index) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.index = index;
+        card.dataset.emoji = emoji;
+        card.textContent = "";
+        card.addEventListener("click", flipCard);
+        board.appendChild(card);
+      });
+    }
+
+    function flipCard(e) {
+      const card = e.target;
+      if (card.classList.contains("flipped") || flippedCards.length === 2) return;
+
+      card.textContent = card.dataset.emoji;
+      card.classList.add("flipped");
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        setTimeout(checkMatch, 600);
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+
+      if (card1.dataset.emoji !== card2.dataset.emoji) {
+        card1.textContent = "";
+        card2.textContent = "";
+        card1.classList.remove("flipped");
+        card2.classList.remove("flipped");
+      } else {
+        matched += 1;
+      }
+
+      flippedCards = [];
+
+      if (matched === emojis.length) {
+        setTimeout(() => {
+          board.style.display = "none";
+          winMessage.style.display = "block";
+        }, 500);
+      }
+    }
+  </script>
+</body>
+</html>

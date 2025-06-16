@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conalep 236</title>
+  <style>
+    body {
+      background-color: skyblue;
+      color: purple;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.6;
+    }
+
+    .contenedor {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    video {
+      width: 30%;
+      max-width: 300px;
+      border: 5px solid deeppink;
+      border-radius: 10px;
+    }
+
+    img {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 50%; /* imagen circular */
+      border: 5px solid deeppink; /* borde rosa fuerte */
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 12px 24px;
+      background-color: deeppink;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: hotpink;
+    }
+  </style>
+</head>
+<body>
+  <h1>Video sobre Basura Electronica</h1>
+  <p>Aqui veras lo que realizaron los alumnos de Conalep Ixtapaluca 236</p>
+
+  <div class="contenedor">
+    <video controls>
+      <source src="video1.mp4" type="video/mp4">
+      Tu navegador no soporta video.
+    </video>
+
+    <img src="pae.jpeg" alt="Basura Electronica">
+
+    <video controls>
+      <source src="video2.mp4" type="video/mp4">
+      Tu navegador no soporta video.
+    </video>
+  </div>
+
+ 
+  <a href="menu1.html" class="back-button">Regresar al Menu</a>
+</body>
+</html>

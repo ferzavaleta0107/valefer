@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<a href="menu.html" class="back-button">Regresar al Menu</a>
+  <meta charset="UTF-8">
+  <title>¡Click al Monstruo - Con Récord!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: pink;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #game-area {
+      position: relative;
+      width: 90vw;
+      height: 70vh;
+      margin: 20px auto;
+      border: 3px solid #333;
+      background-color: #fffbe6;
+      overflow: hidden;
+    }
+
+    #monster {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      background-size: cover;
+      display: none;
+      cursor: pointer;
+    }
+
+    #score, #time, #record {
+      font-size: 20px;
+      margin: 10px;
+    }
+
+    #start-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+    }
+
+    select {
+      padding: 5px;
+      font-size: 16px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>¡Click al Monstruo!</h1>
+  <p>Haz clic en el monstruo antes de que desaparezca. ¡Elige nivel y personaje!</p>
+
+  <div>
+    <label>Selecciona dificultad: 
+      <select id="difficulty">
+        <option value="1000">Fácil</option>
+        <option value="700">Medio</option>
+        <option value="400">Difícil</option>
+      </select>
+    </label>
+
+    <label>Elige tu monstruo:
+      <select id="monster-select">
+        <option value="https://cdn-icons-png.flaticon.com/512/616/616408.png">Monstruo 1</option>
+        <option value="https://cdn-icons-png.flaticon.com/512/763/763812.png">Monstruo 2</option>
+        <option value="https://cdn-icons-png.flaticon.com/512/1356/1356494.png">Monstruo 3</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="record">🎯 Récord personal: 0</div>
+  <div id="score">Puntaje: 0</div>
+  <div id="time">Tiempo restante: 30s</div>
+  <button id="start-btn">Comenzar Juego</button>
+  <div id="game-area">
+    <div id="monster"></div>
+  </div>
+
+  <audio id="click-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
+  <script>
+    const monster = document.getElementById('monster');
+    const gameArea = document.getElementById('game-area');
+    const scoreDisplay = document.getElementById('score');
+    const timeDisplay = document.getElementById('time');
+    const recordDisplay = document.getElementById('record');
+    const startBtn = document.getElementById('start-btn');
+    const difficultySelect = document.getElementById('difficulty');
+    const monsterSelect = document.getElementById('monster-select');
+    const clickSound = document.getElementById('click-sound');
+
+    let score = 0;
+    let timeLeft = 30;
+    let gameInterval;
+    let timerInterval;
+
+    // Cargar récord guardado
+    let bestScore = localStorage.getItem('bestScore') || 0;
+    recordDisplay.textContent = `🎯 Récord personal: ${bestScore}`;
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreDisplay.textContent = 'Puntaje: 0';
+      timeDisplay.textContent = 'Tiempo restante: 30s';
+
+      const delay = parseInt(difficultySelect.value);
+      monster.style.backgroundImage = `url(${monsterSelect.value})`;
+      monster.style.display = 'block';
+
+      gameInterval = setInterval(showMonster, delay);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = `Tiempo restante: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(gameInterval);
+          clearInterval(timerInterval);
+          monster.style.display = 'none';
+
+          // Verificar si es nuevo récord
+          if (score > bestScore) {
+            bestScore = score;
+            localStorage.setItem('bestScore', bestScore);
+            recordDisplay.textContent = `🎯 Récord personal: ${bestScore}`;
+            alert(`🎉 ¡Nuevo récord! Tu puntaje fue: ${score}`);
+          } else {
+            alert(`¡Fin del juego! Tu puntaje fue: ${score}`);
+          }
+        }
+      }, 1000);
+    }
+
+    function showMonster() {
+      const maxX = gameArea.clientWidth - monster.offsetWidth;
+      const maxY = gameArea.clientHeight - monster.offsetHeight;
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+      monster.style.left = `${randomX}px`;
+      monster.style.top = `${randomY}px`;
+    }
+
+    monster.addEventListener('click', () => {
+      score++;
+      scoreDisplay.textContent = `Puntaje: ${score}`;
+      clickSound.currentTime = 0;
+      clickSound.play();
+      showMonster();
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+
+</body>
+</html>
